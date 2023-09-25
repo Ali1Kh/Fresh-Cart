@@ -1,7 +1,7 @@
 export default function Features() {
   return (
     <>
-      <h1>Features....</h1>
+      <h1>Soon....</h1>
     </>
   );
 }

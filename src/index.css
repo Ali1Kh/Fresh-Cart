@@ -7,12 +7,19 @@
   --font-family: "Encode Sans Expanded", sans-serif;
   --rating-color: #ffc908;
 }
-.mainColorBg{
-    background-color: var(--main-color) !important;
+.mainColorBg {
+  background-color: var(--main-color) !important;
 }
-.lightColorBg{
-    background-color: var(--light-color);
+.mainColor {
+  color: var(--main-color) !important;
 }
-.cursor-pointer{
-    cursor: pointer !important;
+.lightColorBg {
+  background-color: var(--light-color);
+}
+.cursor-pointer {
+  cursor: pointer !important;
+}
+a{
+  text-decoration: none !important;
+  color: black !important;
 }
