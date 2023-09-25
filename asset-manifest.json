@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/Fresh-Cart/static/css/main.b960b9e6.css",
+    "main.js": "/Fresh-Cart/static/js/main.c990f988.js",
+    "static/media/fa-solid-900.ttf": "/Fresh-Cart/static/media/fa-solid-900.d75e3fd1eb12e9bd6655.ttf",
+    "static/media/masterCard.png": "/Fresh-Cart/static/media/masterCard.c1c3f1e9c8aad6e536df.png",
+    "static/media/fa-brands-400.ttf": "/Fresh-Cart/static/media/fa-brands-400.016b4a6cdced82ab3aa1.ttf",
+    "static/media/fa-solid-900.woff2": "/Fresh-Cart/static/media/fa-solid-900.b6879d41b0852f01ed5b.woff2",
+    "static/media/fa-brands-400.woff2": "/Fresh-Cart/static/media/fa-brands-400.878f31251d960bd6266f.woff2",
+    "static/media/error.svg": "/Fresh-Cart/static/media/error.084f5f5b0eb10d3216cb7c939108e1f6.svg",
+    "static/media/paypal.png": "/Fresh-Cart/static/media/paypal.e5903e4ad1ac0f166577.png",
+    "static/media/googlePlay.png": "/Fresh-Cart/static/media/googlePlay.88c0cf672ae4dd873d7f.png",
+    "static/media/fa-regular-400.ttf": "/Fresh-Cart/static/media/fa-regular-400.50701fbb8177c2dde530.ttf",
+    "static/media/apple.png": "/Fresh-Cart/static/media/apple.ac8ebb531a4c6685aa8a.png",
+    "static/media/amazon.png": "/Fresh-Cart/static/media/amazon.0987f3d2995b8311fa3a.png",
+    "static/media/fa-regular-400.woff2": "/Fresh-Cart/static/media/fa-regular-400.b041b1fa4fe241b23445.woff2",
+    "static/media/freshcart-logo.svg": "/Fresh-Cart/static/media/freshcart-logo.53f7a424c3aedc30a0fb46dc2278137c.svg",
+    "static/media/fa-v4compatibility.ttf": "/Fresh-Cart/static/media/fa-v4compatibility.c6a0c95b0a95c4553700.ttf",
+    "static/media/fa-v4compatibility.woff2": "/Fresh-Cart/static/media/fa-v4compatibility.1bac2991f3dbfa237aec.woff2",
+    "index.html": "/Fresh-Cart/index.html",
+    "main.b960b9e6.css.map": "/Fresh-Cart/static/css/main.b960b9e6.css.map",
+    "main.c990f988.js.map": "/Fresh-Cart/static/js/main.c990f988.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b960b9e6.css",
+    "static/js/main.c990f988.js"
+  ]
+}
