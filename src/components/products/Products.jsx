@@ -3,24 +3,19 @@ import { useQuery } from "react-query";
 import "react-loader-spinner";
 import { BallTriangle } from "react-loader-spinner";
 import { Link } from "react-router-dom";
-import Slider from "react-slick";
-import "./products.css";
-import CategoriesSlides from "../CategoriesSlider/CategoriesSlider";
-import CategoriesSlider from "../CategoriesSlider/CategoriesSlider";
+import { cartContext } from "../context/cartContext";
+import { useContext } from "react";
+import toast from "react-hot-toast";
 export default function Products() {
   function getProducts() {
-    // console.log("pageNumber ", pageNumber);
     return axios.get(
-      `https://ecommerce.routemisr.com/api/v1/products?sort=-price&page=${1}&limit=20`
+      `https://ecommerce.routemisr.com/api/v1/products?sort=-price&page=${1}&limit=30`
     );
   }
   const { data, isLoading, isFetching, refetch } = useQuery(
     "products",
     getProducts
   );
-  // console.log("isLoading ", isLoading);
-  // console.log("isFetching ", isFetching);
-
   const settings = {
     dots: false,
     infinite: true,
@@ -32,9 +27,17 @@ export default function Products() {
     arrows: false,
     cssEase: "linear",
   };
-
+  const { addToCart } = useContext(cartContext);
+  async function addProduct(id) {
+    const responseData = await addToCart(id);
+    toast.success(responseData.message, {
+      duration: 1000,
+      position: "top-right",
+    });
+  }
   return (
     <>
+      <title>Products</title>
       {isLoading ? (
         <div className="vh-100 p-0  d-flex justify-content-center align-items-center">
           <BallTriangle
@@ -51,65 +54,6 @@ export default function Products() {
       ) : (
         <>
           <div className="container p-4">
-            <div className="ads mb-3">
-              <div className="row g-0">
-                <div className="col-md-9">
-                  <Slider {...settings}>
-                    <div className="adImageContainer">
-                      <img
-                        className="w-100"
-                        src={require("../../imgs/slider-image-1.jpeg")}
-                        alt=""
-                        style={{ height: "300px" }}
-                      />
-                    </div>
-                    <div className="adImageContainer">
-                      <img
-                        className="w-100"
-                        src={require("../../imgs/slider-image-2.jpeg")}
-                        alt=""
-                        style={{ height: "300px" }}
-                      />
-                    </div>
-                    <div className="adImageContainer">
-                      <img
-                        className="w-100"
-                        src={require("../../imgs/slider-image-3.jpeg")}
-                        alt=""
-                        style={{ height: "300px" }}
-                      />
-                    </div>
-                    <div className="adImageContainer">
-                      <img
-                        className="w-100"
-                        src={require("../../imgs/grocery-banner-2.jpeg")}
-                        alt=""
-                        style={{ height: "300px" }}
-                      />
-                    </div>
-                  </Slider>
-                </div>
-                <div className="col-md-3">
-                  <div className="adImageContainer">
-                    <img
-                      className="w-100"
-                      src={require("../../imgs/blog-img-2.jpeg")}
-                      alt=""
-                      style={{ height: "150px" }}
-                    />
-                    <img
-                      className="w-100"
-                      src={require("../../imgs/blog-img-1.jpeg")}
-                      alt=""
-                      style={{ height: "150px" }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="popularCategories mb-5">
-              <CategoriesSlider />
-            </div>
             <div className="row gy-4 mb-5">
               {data?.data.data.map((product) => {
                 return (
@@ -139,7 +83,14 @@ export default function Products() {
                           </div>
                         </div>
                       </Link>
-                      <div className="btn btn-success my-2">Add To Cart</div>
+                      <button
+                        onClick={() => {
+                          addProduct(product._id);
+                        }}
+                        className="btn btn-success my-2"
+                      >
+                        Add To Cart
+                      </button>
                     </div>
                   </div>
                 );
@@ -200,8 +151,3 @@ export default function Products() {
     </>
   );
 }
-
-// import React, { useContext } from "react";
-// import { authContext } from "../context/authentication";
-//    const {token} =  useContext(authContext)
-//    console.log(token);

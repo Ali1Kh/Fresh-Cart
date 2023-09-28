@@ -2,17 +2,18 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../imgs/freshcart-logo.svg";
 import { authContext } from "../context/authentication";
+import { cartContext } from "../context/cartContext";
 export default function Navbar() {
-  const { token , setToken } = useContext(authContext);
-
-  function logout(){
+  const { token, setToken } = useContext(authContext);
+  const { cardItemsCount } = useContext(cartContext);
+  function logout() {
     localStorage.clear("token");
-    setToken(null)
+    setToken(null);
   }
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg bg-body-tertiary position-sticky z-3 top-0 start-0 end-0">
         <div className="container">
           <Link className="navbar-brand" to="home">
             <img className="w-100" src={logo} alt="logo" />
@@ -40,11 +41,6 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/features">
-                  Features
-                </Link>
-              </li>
-              <li className="nav-item">
                 <Link className="nav-link" to="/products">
                   Products
                 </Link>
@@ -63,23 +59,35 @@ export default function Navbar() {
             <ul className="navbar-nav d-flex gap-2 ms-auto list-unstyled">
               {token ? (
                 <>
-                     <li>
-                     <Link
-                       className="text-decoration-none text-black me-2"
-                       to="profile"
-                     >
-                       <i className="fa-regular fa-user fs-5"></i>
-                     </Link>
-                   </li>
-                <li>
-                  <Link
-                    onClick={logout}
-                    className="text-decoration-none text-black"
-                    to="login"
-                  >
-                    Logout
-                  </Link>
-                </li>
+                  <li>
+                    <Link
+                      className="text-decoration-none text-black p-1 me-2 position-relative"
+                      to="cart"
+                    >
+                      <i className="fa-solid fa-cart-shopping fs-4"></i>
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill mainColorBg">
+                        {cardItemsCount}
+                        <span className="visually-hidden">unread messages</span>
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-decoration-none text-black me-2"
+                      to="profile"
+                    >
+                      <i className="fa-regular fa-user fs-5"></i>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      onClick={logout}
+                      className="text-decoration-none text-black"
+                      to="login"
+                    >
+                      Logout
+                    </Link>
+                  </li>
                 </>
               ) : (
                 <>

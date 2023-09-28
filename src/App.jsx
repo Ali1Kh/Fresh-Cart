@@ -1,6 +1,6 @@
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import "./App.css";
-import Layout from "./components/cart/Layout";
+import Layout from "./components/Layout/Layout";
 import Login from "./components/login/Login";
 import Home from "./components/home/Home";
 import NotFound from "./components/NotFound/NotFound";
@@ -9,11 +9,13 @@ import Products from "./components/products/Products";
 import { AuthProvider } from "./components/context/authentication";
 import Brands from "./components/brands/Brands";
 import Categories from "./components/categories/Categories";
-import Features from "./components/features/Features";
 import Profile from "./components/profile/Profile";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProductDetails from "./components/productDetails/ProductDetails";
+import Cart from "./components/Cart/Cart";
+import CartContextProvider from "./components/context/cartContext";
+import { Toaster } from "react-hot-toast";
 const router = createHashRouter([
   {
     path: "",
@@ -25,7 +27,6 @@ const router = createHashRouter([
       { path: "login", element: <Login /> },
       { path: "products", element: <Products /> },
       { path: "productDetails/:id", element: <ProductDetails /> },
-      { path: "features", element: <Features /> },
       { path: "categories", element: <Categories /> },
       { path: "brands", element: <Brands /> },
       {
@@ -33,6 +34,14 @@ const router = createHashRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute>
+            <Cart />
           </ProtectedRoute>
         ),
       },
@@ -45,9 +54,12 @@ function App() {
   const client = new QueryClient();
   return (
     <QueryClientProvider client={client}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <CartContextProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </CartContextProvider>
+      <Toaster />
     </QueryClientProvider>
   );
 }

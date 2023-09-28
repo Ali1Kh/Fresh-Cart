@@ -54,6 +54,7 @@ export default function Login() {
   });
   return (
     <>
+      <title>Login</title>
       <section className="login p-5 mb-5">
         <div className="container">
           <h2 className="mb-4">Login :</h2>

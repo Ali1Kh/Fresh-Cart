@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
       setToken(localStorage.getItem("Token"));
     }
   },[]);
-
   return (
     <authContext.Provider value={{ token, setToken }}>
       {children}

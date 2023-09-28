@@ -63,6 +63,7 @@ export default function Register() {
   });
   return (
     <>
+      <title>Register</title>
       <section className="register p-5">
         <div className="container">
           <h2 className="mb-4">Register Now :</h2>

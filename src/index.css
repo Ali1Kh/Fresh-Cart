@@ -19,7 +19,17 @@
 .cursor-pointer {
   cursor: pointer !important;
 }
-a{
+a {
   text-decoration: none !important;
   color: black !important;
+}
+.borderMainColor {
+  background-color: transparent !important;
+  border-style: solid !important;
+  border-color: var(--main-color) !important;
+  transition: all 450ms !important;
+}
+.borderMainColor:hover:not(:disabled) {
+  color: white !important;
+  background-color: var(--main-color) !important;
 }

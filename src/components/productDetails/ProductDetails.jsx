@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { BallTriangle } from "react-loader-spinner";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import "./productDetails.css";
+import { cartContext } from "../context/cartContext";
+import toast from "react-hot-toast";
 export default function ProductDetails() {
   const { id } = useParams();
   const { data, isLoading } = useQuery("getProductDetails", getProductDetails, {
@@ -25,8 +27,18 @@ export default function ProductDetails() {
     arrows: true,
   };
   let [mainImage, setMainImage] = useState(null);
+  
+  const { addToCart } = useContext(cartContext);
+  async function addProduct(id) {
+    const responseData = await addToCart(id);
+    toast.success("Successfully created!", {
+      duration: 1000,
+      position: "top-right",
+    });
+  }
   return (
     <>
+      <title>Product Details</title>
       {isLoading ? (
         <>
           <div className="vh-100 p-0  d-flex justify-content-center align-items-center">
@@ -58,9 +70,8 @@ export default function ProductDetails() {
                       <Slider {...settings}>
                         {productDetailes.images.map((image, idx) => {
                           return (
-                            <>
+                            <div key={idx}>
                               <img
-                                id={idx}
                                 className="subImage w-75"
                                 src={image}
                                 alt=""
@@ -68,7 +79,7 @@ export default function ProductDetails() {
                                   setMainImage(image);
                                 }}
                               />
-                            </>
+                            </div>
                           );
                         })}
                       </Slider>
@@ -98,7 +109,14 @@ export default function ProductDetails() {
                         </div>
                       </div>
                       <div className="addToCart my-3 p-2">
-                        <div className="btn btn-success w-100">Add To Cart</div>
+                        <button
+                          onClick={() => {
+                            addProduct(productDetailes._id);
+                          }}
+                          className="btn btn-success w-100"
+                        >
+                          Add To Cart
+                        </button>
                       </div>
                     </div>
                   </div>

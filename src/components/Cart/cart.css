@@ -1,0 +1,7 @@
+.shoppingCart .removeItem button {
+  transition: all 450ms !important;
+}
+.shoppingCart .removeItem:hover button{
+  color: white !important;
+  background-color: var(--main-color) !important;
+}
