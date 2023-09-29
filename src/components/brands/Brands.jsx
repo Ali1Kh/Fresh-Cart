@@ -37,7 +37,6 @@ export default function Brands() {
                       src={brand.image}
                       alt={brand.name}
                     />
-                    {brand._id}
                   </div>
                 </Link>
               );
