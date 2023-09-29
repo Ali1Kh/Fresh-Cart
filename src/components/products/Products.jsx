@@ -2,38 +2,41 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import "react-loader-spinner";
 import { BallTriangle } from "react-loader-spinner";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { cartContext } from "../context/cartContext";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 export default function Products() {
+  const { cId , bId } = useParams();
   function getProducts() {
-    return axios.get(
-      `https://ecommerce.routemisr.com/api/v1/products?sort=-price&page=${1}&limit=30`
-    );
+    try {
+      return axios.get(
+        `https://ecommerce.routemisr.com/api/v1/products?sort=-price&${
+          cId ? `category[in]=${cId}` : ""
+        }&${bId ? `brand=${bId}` : ""}`
+      );
+    } catch (ex) {
+      console.log(ex);
+    }
   }
-  const { data, isLoading, isFetching, refetch } = useQuery(
-    "products",
-    getProducts
-  );
-  const settings = {
-    dots: false,
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 3000,
-    arrows: false,
-    cssEase: "linear",
-  };
+  const { data, isLoading } = useQuery("products", getProducts, {
+    cacheTime: 0,
+  });
   const { addToCart } = useContext(cartContext);
   async function addProduct(id) {
-    const responseData = await addToCart(id);
-    toast.success(responseData.message, {
-      duration: 1000,
-      position: "top-right",
-    });
+    try {
+      const responseData = await addToCart(id);
+      if (!responseData) {
+        toast.error("Error", { position: "top-right" });
+      } else if (responseData.status == "success") {
+        toast.success("Successfully created!", {
+          duration: 1000,
+          position: "top-right",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <>
@@ -55,46 +58,62 @@ export default function Products() {
         <>
           <div className="container p-4">
             <div className="row gy-4 mb-5">
-              {data?.data.data.map((product) => {
-                return (
-                  <div key={product._id} className="col-md-3">
-                    <div className="cardItem rounded-3 p-1 d-flex flex-column">
-                      <Link to={`/productDetails/${product._id}`}>
-                        <div className="image"></div>
-                        <img
-                          src={product.imageCover}
-                          alt=""
-                          className="w-100"
-                        />
-                        <h5 className="catigory mainColor">
-                          {product.category.name}
-                        </h5>
-                        <h6 className="title">
-                          {product.title.split("").slice(0, 25).concat("...")}
-                        </h6>
-                        <div className="info d-flex justify-content-between">
-                          <span className="price">{product.price} EGP</span>
-                          <div className="rate">
-                            <i
-                              className="fa fa-star me-1"
-                              style={{ color: "#ffc908" }}
+              {data?.data.data.length > 0 ? (
+                <>
+                  {data?.data.data.map((product) => {
+                    return (
+                      <div key={product._id} className="col-md-3">
+                        <div className="cardItem rounded-3 p-1 d-flex flex-column">
+                          <Link to={`/productDetails/${product._id}`}>
+                            <div className="image"></div>
+                            <img
+                              src={product.imageCover}
+                              alt=""
+                              className="w-100"
                             />
-                            <span>{product.ratingsAverage}</span>
-                          </div>
+                            <h5 className="catigory mainColor">
+                              {product.category.name}
+                            </h5>
+                            <h6 className="title">
+                              {product.title
+                                .split("")
+                                .slice(0, 25)
+                                .concat("...")}
+                            </h6>
+                            <div className="info d-flex justify-content-between">
+                              <span className="price">{product.price} EGP</span>
+                              <div className="rate">
+                                <i
+                                  className="fa fa-star me-1"
+                                  style={{ color: "#ffc908" }}
+                                />
+                                <span>{product.ratingsAverage}</span>
+                              </div>
+                            </div>
+                          </Link>
+                          <button
+                            onClick={() => {
+                              addProduct(product._id);
+                            }}
+                            className="btn btn-success my-2"
+                          >
+                            Add To Cart
+                          </button>
                         </div>
-                      </Link>
-                      <button
-                        onClick={() => {
-                          addProduct(product._id);
-                        }}
-                        className="btn btn-success my-2"
-                      >
-                        Add To Cart
-                      </button>
-                    </div>
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  <div className="d-flex justify-content-center align-items-center flex-column p-5">
+                    <i className="fa-regular fa-face-frown fa-5x mb-4"></i>
+                    <h3>
+                      Sorry, There's No Products in this Category Right Now.
+                    </h3>
                   </div>
-                );
-              })}
+                </>
+              )}
             </div>
             {/* <div className="pagination d-flex justify-content-center align-items-center">
               <nav aria-label="Page navigation example">

@@ -11,6 +11,7 @@ export default function Cart() {
     totalCartPrice,
     updateProduct,
     deleteProduct,
+    clearCart,
   } = useContext(cartContext);
   const [isLoading, setLoading] = useState(false);
   const [isDeleteLoading, setDeleteLoading] = useState(false);
@@ -38,19 +39,33 @@ export default function Cart() {
       setDeleteLoading(false);
     }, 1000);
   }
+  async function clearCarts() {
+    const res = await clearCart();
+    console.log(res);
+    if (res.message == "success") {
+      toast.success("Cart Deleted Successfuly");
+    } else {
+      toast.error("Failed To Delete Cart");
+    }
+  }
 
   return (
     <>
+      <title>Cart</title>
       {cardItems ? (
         <>
-          <title>Cart</title>
           <section className="container p-4 my-3 lightColorBg rounded-1 ">
             <div className="row gy-3">
-              <div className="col-md-9">
-                <div className="shoppingCart p-3 h-100 bg-white rounded-3">
-                  {cardItems.products.length > 0 ? (
-                    <>
-                      <h4 className="mb-3">Shopping Cart :</h4>
+              {cardItemsCount > 0 ? (
+                <>
+                  <div className="col-md-9">
+                    <div className="shoppingCart p-3 bg-white rounded-3">
+                      <h4 className="mb-3">
+                        Shopping Cart{" "}
+                        <span className="text-muted fs-5">
+                          ({cardItemsCount} Items)
+                        </span>{" "}
+                      </h4>
                       {cardItems.products.map((product, idx) => {
                         return product ? (
                           <div
@@ -154,29 +169,47 @@ export default function Cart() {
                           "A7a"
                         );
                       })}
-                    </>
-                  ) : (
-                    <div className="d-flex flex-column align-items-center justify-content-center p-3">
-                      <i class="fa-solid fa-cart-plus fa-5x mainColor mb-3"></i>
-                      <h3>Your Card Is Empty</h3>
-                      <p>Browse our categories and discover our best deals!</p>
-                      <Link to={"/home"} className="btn mainColorBg text-white">Browse</Link>
                     </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="checkOut p-3 bg-white rounded-3">
-                  <h4 className="mb-3">Cart Summary</h4>
-                  <div className="total border-top border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <span className="h6 m-0">Total:</span>
-                    <span className="h6 m-0">EGP {totalCartPrice}</span>
+                    {/* Button */}
+                    {cardItemsCount > 0 ? (
+                      <div className="clear d-flex">
+                        <button
+                          onClick={clearCarts}
+                          className="btn mt-3 ms-auto borderMainColor"
+                        >
+                          Delete Cart
+                        </button>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                  <button className="btn w-100 mt-3 borderMainColor">
-                    CHECKOUT
-                  </button>
+                  <div className="col-md-3">
+                    <div className="checkOut p-3 bg-white rounded-3">
+                      <h4 className="mb-3">Cart Summary</h4>
+                      <div className="total border-top border-bottom py-3 d-flex justify-content-between align-items-center">
+                        <span className="h6 m-0">
+                          Total ({cardItemsCount} Items)
+                        </span>
+                        <span className="h6 m-0">EGP {totalCartPrice}</span>
+                      </div>
+                      <button className="btn w-100 mt-3 borderMainColor">
+                        CHECKOUT
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // !Empty Cart
+                <div className="d-flex flex-column align-items-center justify-content-center p-5">
+                  <i class="fa-solid fa-cart-plus fa-5x mainColor mb-3"></i>
+                  <h3>Your Card Is Empty</h3>
+                  <p>Browse our categories and discover our best deals!</p>
+                  <Link to={"/home"} className="btn mainColorBg text-white">
+                    Browse
+                  </Link>
                 </div>
-              </div>
+              )}
             </div>
           </section>
         </>

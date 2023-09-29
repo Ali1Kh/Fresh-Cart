@@ -16,6 +16,8 @@ import ProductDetails from "./components/productDetails/ProductDetails";
 import Cart from "./components/Cart/Cart";
 import CartContextProvider from "./components/context/cartContext";
 import { Toaster } from "react-hot-toast";
+import WishContextProvider from "./components/context/wishListContext";
+
 const router = createHashRouter([
   {
     path: "",
@@ -26,6 +28,8 @@ const router = createHashRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "products", element: <Products /> },
+      { path: "products/category/:cId", element: <Products /> },
+      { path: "products/brands/:bId", element: <Products /> },
       { path: "productDetails/:id", element: <ProductDetails /> },
       { path: "categories", element: <Categories /> },
       { path: "brands", element: <Brands /> },
@@ -54,11 +58,13 @@ function App() {
   const client = new QueryClient();
   return (
     <QueryClientProvider client={client}>
-      <CartContextProvider>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </CartContextProvider>
+      <WishContextProvider>
+        <CartContextProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </CartContextProvider>
+      </WishContextProvider>
       <Toaster />
     </QueryClientProvider>
   );

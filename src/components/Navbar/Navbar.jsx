@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import logo from "../../imgs/freshcart-logo.svg";
 import { authContext } from "../context/authentication";
 import { cartContext } from "../context/cartContext";
+import { wishContext } from "../context/wishListContext";
 export default function Navbar() {
   const { token, setToken } = useContext(authContext);
-  const { cardItemsCount } = useContext(cartContext);
+  const { cardItemsCount, wishListCount } = useContext(cartContext);
+  const { x } = useContext(wishContext);
   function logout() {
     localStorage.clear("token");
     setToken(null);
   }
+
+  console.log("x",x);
 
   return (
     <>
@@ -62,13 +66,37 @@ export default function Navbar() {
                   <li>
                     <Link
                       className="text-decoration-none text-black p-1 me-2 position-relative"
+                      to="wishlist"
+                    >
+                      <i className="fa-regular fa-heart fs-4"></i>
+                      {wishListCount > 0 ? (
+                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill mainColorBg">
+                          {wishListCount}
+                          <span className="visually-hidden">
+                            unread messages
+                          </span>
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-decoration-none text-black p-1 me-2 position-relative"
                       to="cart"
                     >
                       <i className="fa-solid fa-cart-shopping fs-4"></i>
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill mainColorBg">
-                        {cardItemsCount}
-                        <span className="visually-hidden">unread messages</span>
-                      </span>
+                      {cardItemsCount ? (
+                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill mainColorBg">
+                          {cardItemsCount}
+                          <span className="visually-hidden">
+                            unread messages
+                          </span>
+                        </span>
+                      ) : (
+                        ""
+                      )}
                     </Link>
                   </li>
                   <li>

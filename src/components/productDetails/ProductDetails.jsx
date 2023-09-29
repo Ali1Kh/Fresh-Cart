@@ -27,14 +27,18 @@ export default function ProductDetails() {
     arrows: true,
   };
   let [mainImage, setMainImage] = useState(null);
-  
+
   const { addToCart } = useContext(cartContext);
   async function addProduct(id) {
     const responseData = await addToCart(id);
-    toast.success("Successfully created!", {
-      duration: 1000,
-      position: "top-right",
-    });
+    if (!responseData) {
+      toast.error("Error",{position: "top-right"});
+    } else if (responseData.status == "success") {
+      toast.success("Successfully created!", {
+        duration: 1000,
+        position: "top-right",
+      });
+    }
   }
   return (
     <>

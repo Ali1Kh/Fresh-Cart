@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { createContext, useEffect } from "react";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 export const cartContext = createContext();
 export default function CartContextProvider({ children }) {
   const [cardItems, setCardItems] = useState(null);
@@ -39,8 +40,13 @@ export default function CartContextProvider({ children }) {
       setCardItemsCount(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
       return data;
-    } catch (ex) {
-      console.log("Error", ex);
+    } catch (error) {
+      if(error.response.data.statusMsg=="fail"){
+        setCardItemsCount(0);
+        setTotalCartPrice(0);
+        setCardItems(true);
+      }
+      console.log("Error", error);
     }
   }
   useEffect(() => {
@@ -81,6 +87,23 @@ export default function CartContextProvider({ children }) {
       return data;
     } catch (ex) {
       console.log("Error", ex);
+      <Navigate to={"/home"} />;
+    }
+  }
+  async function clearCart() {
+    try {
+      const { data } = await axios.delete(
+        `https://ecommerce.routemisr.com/api/v1/cart`,
+        {
+          headers: {
+            token: localStorage.getItem("Token"),
+          },
+        }
+      );
+      getCartData();
+      return data;
+    } catch (ex) {
+      console.log("Error", ex);
     }
   }
 
@@ -91,6 +114,7 @@ export default function CartContextProvider({ children }) {
         getCartData,
         updateProduct,
         deleteProduct,
+        clearCart,
         cardItems,
         cardItemsCount,
         totalCartPrice,

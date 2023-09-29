@@ -1,6 +1,22 @@
 import React from "react";
 import "./footer.css";
+import emailjs from "emailjs-com";
 export default function Footer() {
+  const form = {
+    to_email: "lolgamming2298@gmail.com",
+    message: "Sorry The Mobile Application isn't available right now.",
+  };
+
+  const sendEmail = () => {
+    emailjs
+      .send("ali1kh", "template_al8z13s", form, "nyrmJMKVFzi48j3wI")
+      .then((response) => {
+        console.log("Email sent:", response);
+      })
+      .catch((error) => {
+        console.error("Email error:", error);
+      });
+  };
   return (
     <>
       <footer className="lightColorBg p-3 ">
@@ -19,12 +35,14 @@ export default function Footer() {
                 type="email"
                 placeholder="Email.."
               />
-              <button className="btn w-25 mainColorBg text-white">
+              <button
+                onClick={sendEmail}
+                className="btn w-25 mainColorBg text-white"
+              >
                 Share App Link
               </button>
             </div>
           </div>
-
           <div className="info mb-4 ps-0 p-4 border border-start-0 border-end-0 ">
             <div className="row align-items-center justify-content-between">
               <div className="col-md-6">
