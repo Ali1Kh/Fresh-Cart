@@ -7,6 +7,7 @@ export default function CartContextProvider({ children }) {
   const [cardItems, setCardItems] = useState(null);
   const [totalCartPrice, setTotalCartPrice] = useState(0);
   const [cardItemsCount, setCardItemsCount] = useState(0);
+  const [cartId, setCartId] = useState(null);
   async function addToCart(id) {
     try {
       const { data } = await axios.post(
@@ -39,18 +40,16 @@ export default function CartContextProvider({ children }) {
       setCardItems(data.data);
       setCardItemsCount(data.numOfCartItems);
       setTotalCartPrice(data.data.totalCartPrice);
+      setCartId(data.data._id);
       return data;
     } catch (error) {
-      if(error.response.data.statusMsg=="fail"){
-        setCardItemsCount(0);
-        setTotalCartPrice(0);
-        setCardItems(true);
-      }
       console.log("Error", error);
     }
   }
   useEffect(() => {
-    getCartData();
+    if (localStorage.getItem("Token")) {
+     getCartData();
+    }
   }, []);
 
   async function updateProduct(id, count) {
@@ -100,7 +99,9 @@ export default function CartContextProvider({ children }) {
           },
         }
       );
-      getCartData();
+      setCardItemsCount(0);
+      setTotalCartPrice(0);
+      setCardItems(true);
       return data;
     } catch (ex) {
       console.log("Error", ex);
@@ -118,6 +119,7 @@ export default function CartContextProvider({ children }) {
         cardItems,
         cardItemsCount,
         totalCartPrice,
+        cartId,
       }}
     >
       {children}

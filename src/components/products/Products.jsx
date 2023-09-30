@@ -6,8 +6,11 @@ import { Link, useParams } from "react-router-dom";
 import { cartContext } from "../context/cartContext";
 import { useContext } from "react";
 import toast from "react-hot-toast";
+import "./products.css";
+import $ from "jquery";
+import { wishContext } from "../context/wishListContext";
 export default function Products() {
-  const { cId , bId } = useParams();
+  const { cId, bId } = useParams();
   function getProducts() {
     try {
       return axios.get(
@@ -29,7 +32,7 @@ export default function Products() {
       if (!responseData) {
         toast.error("Error", { position: "top-right" });
       } else if (responseData.status == "success") {
-        toast.success("Successfully created!", {
+        toast.success("Product Added To Cart Successfully", {
           duration: 1000,
           position: "top-right",
         });
@@ -38,6 +41,26 @@ export default function Products() {
       console.log(e);
     }
   }
+  const { addToWishlist } = useContext(wishContext);
+  function addToWish(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    addToWishlist(id);
+  }
+  $(".wishBtn").hover(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $(e.target).removeClass("fa-regular");
+      $(e.target).addClass("fa-solid");
+    },
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $(e.target).addClass("fa-regular");
+      $(e.target).removeClass("fa-solid");
+    }
+  );
   return (
     <>
       <title>Products</title>
@@ -71,9 +94,15 @@ export default function Products() {
                               alt=""
                               className="w-100"
                             />
-                            <h5 className="catigory mainColor">
-                              {product.category.name}
-                            </h5>
+                            <div className="head d-flex justify-content-between align-items-center">
+                              <h5 className="category mainColor">
+                                {product.category.name}
+                              </h5>
+                              <i
+                                onClick={(e) => addToWish(e, product._id)}
+                                className="wishBtn fa-regular fa-heart fs-5 me-2 mainColor"
+                              ></i>
+                            </div>
                             <h6 className="title">
                               {product.title
                                 .split("")

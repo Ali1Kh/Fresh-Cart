@@ -55,7 +55,7 @@ export default function CategoriesSlider() {
         <Slider {...settings}>
           {data?.data.data.map((category, idx) => {
             return (
-              <div id={idx} className="col-md-2 g-0 m-0">
+              <div key={idx} className="col-md-2 g-0 m-0">
                 <div
                   className="category text-center"
                 >

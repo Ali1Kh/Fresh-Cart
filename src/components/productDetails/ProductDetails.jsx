@@ -9,6 +9,8 @@ import Slider from "react-slick";
 import "./productDetails.css";
 import { cartContext } from "../context/cartContext";
 import toast from "react-hot-toast";
+import $ from "jquery";
+import { wishContext } from "../context/wishListContext";
 export default function ProductDetails() {
   const { id } = useParams();
   const { data, isLoading } = useQuery("getProductDetails", getProductDetails, {
@@ -27,19 +29,38 @@ export default function ProductDetails() {
     arrows: true,
   };
   let [mainImage, setMainImage] = useState(null);
-
   const { addToCart } = useContext(cartContext);
   async function addProduct(id) {
     const responseData = await addToCart(id);
     if (!responseData) {
-      toast.error("Error",{position: "top-right"});
+      toast.error("Error", { position: "top-right" });
     } else if (responseData.status == "success") {
-      toast.success("Successfully created!", {
+      toast.success("Product Added To Cart Successfully", {
         duration: 1000,
         position: "top-right",
       });
     }
   }
+  const { addToWishlist } = useContext(wishContext);
+  function addToWish(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    addToWishlist(id);
+  }
+  $(".wishBtn").hover(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $(e.target).removeClass("fa-regular");
+      $(e.target).addClass("fa-solid");
+    },
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $(e.target).addClass("fa-regular");
+      $(e.target).removeClass("fa-solid");
+    }
+  );
   return (
     <>
       <title>Product Details</title>
@@ -91,13 +112,17 @@ export default function ProductDetails() {
                   </div>
                   <div className="col-md-8 d-flex flex-column justify-content-center">
                     <div className="details">
-                      <h5 className="titleInfo">{productDetailes.title}</h5>
+                      <div className="head d-flex justify-content-between align-items-center mb-2">
+                        <h5 className="titleInfo my-0">
+                          {productDetailes.title}
+                        </h5>
+                        <i
+                          onClick={(e) => addToWish(e, productDetailes._id)}
+                          className="wishBtn cursor-pointer fa-regular fa-heart fs-4 me-2 my-0 mainColor"
+                        ></i>
+                      </div>
                       <p className="description p-1 text-muted">
-                        {productDetailes.description
-                          .split(" ")
-                          .slice(0, 50)
-                          .join(" ")
-                          .concat("...more")}
+                        {productDetailes.description}
                       </p>
                       <h6 className="mainColor">
                         {productDetailes.category.name}

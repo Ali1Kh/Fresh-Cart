@@ -17,6 +17,9 @@ import Cart from "./components/Cart/Cart";
 import CartContextProvider from "./components/context/cartContext";
 import { Toaster } from "react-hot-toast";
 import WishContextProvider from "./components/context/wishListContext";
+import Wishlist from "./components/Wishlist/Wishlist";
+import Checkout from "./components/Checkout/Checkout";
+import Orders from "./components/Orders/Orders";
 
 const router = createHashRouter([
   {
@@ -46,6 +49,30 @@ const router = createHashRouter([
         element: (
           <ProtectedRoute>
             <Cart />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "wishlist",
+        element: (
+          <ProtectedRoute>
+            <Wishlist />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "checkout",
+        element: (
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <Orders />
           </ProtectedRoute>
         ),
       },

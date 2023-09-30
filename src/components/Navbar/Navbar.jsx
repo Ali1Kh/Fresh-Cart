@@ -1,20 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../imgs/freshcart-logo.svg";
 import { authContext } from "../context/authentication";
 import { cartContext } from "../context/cartContext";
 import { wishContext } from "../context/wishListContext";
+import jwtDecode from "jwt-decode";
 export default function Navbar() {
   const { token, setToken } = useContext(authContext);
-  const { cardItemsCount, wishListCount } = useContext(cartContext);
-  const { x } = useContext(wishContext);
+  const { cardItemsCount } = useContext(cartContext);
+  const { wishCount } = useContext(wishContext);
+
+  const [name, setName] = useState(null);
+
+  useEffect(() => {
+    if (localStorage.getItem("Token")) {
+      const { name } = jwtDecode(localStorage.getItem("Token"));
+      setName(name);
+    }
+  }, []);
+
   function logout() {
     localStorage.clear("token");
     setToken(null);
+    setName(null);
   }
-
-  console.log("x",x);
-
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary position-sticky z-3 top-0 start-0 end-0">
@@ -60,7 +69,7 @@ export default function Navbar() {
                 </Link>
               </li>
             </ul>
-            <ul className="navbar-nav d-flex gap-2 ms-auto list-unstyled">
+            <ul className="navbar-nav d-flex align-items-center gap-2 ms-auto list-unstyled">
               {token ? (
                 <>
                   <li>
@@ -69,9 +78,9 @@ export default function Navbar() {
                       to="wishlist"
                     >
                       <i className="fa-regular fa-heart fs-4"></i>
-                      {wishListCount > 0 ? (
+                      {wishCount > 0 ? (
                         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill mainColorBg">
-                          {wishListCount}
+                          {wishCount}
                           <span className="visually-hidden">
                             unread messages
                           </span>
@@ -99,13 +108,44 @@ export default function Navbar() {
                       )}
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      className="text-decoration-none text-black me-2"
-                      to="profile"
+                  <li className="nav-item dropdown">
+                    <a
+                      className="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
                     >
-                      <i className="fa-regular fa-user fs-5"></i>
-                    </Link>
+                      <i className="fa-regular fa-user fs-5 me-2"></i>
+                      <span className="me-2">{name?<>Hi,{name}</>:""}</span>
+                      {/* <i className="fa-solid fa-chevron-down ms-2 fa-1x"></i> */}
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <Link
+                          className="dropdown-item text-decoration-none text-black"
+                          to="profile"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item text-decoration-none text-black"
+                          to="Orders"
+                        >
+                          Orders
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item text-decoration-none text-black"
+                          to="wishlist"
+                        >
+                          Saved Items
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
                   <li>
                     <Link
