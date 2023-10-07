@@ -117,7 +117,7 @@ export default function Navbar() {
                       aria-expanded="false"
                     >
                       <i className="fa-regular fa-user fs-5 me-2"></i>
-                      <span className="me-2">{name?<>Hi,{name}</>:""}</span>
+                      <span className="me-2">{name?<>Hi,{name.split(" ")[0]}</>:""}</span>
                       {/* <i className="fa-solid fa-chevron-down ms-2 fa-1x"></i> */}
                     </a>
                     <ul className="dropdown-menu">

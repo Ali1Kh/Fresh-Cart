@@ -38,73 +38,95 @@ export default function Orders() {
                   </div>
                   {orders.map((order, idx) => {
                     return (
-                      <div key={idx}>
-                        {order.cartItems.map((orderProduct, idx) => {
-                          return (
-                            <div
-                              key={idx}
-                              className="orderProduct border rounded-3 p-3 mb-3"
-                            >
-                              <div className="row">
-                                <div className="col-md-10">
+                      <div
+                        key={idx}
+                        className="border-bottom border-2 p-1 mb-3"
+                      >
+                        <h5 className="mb-3">Order Num : {idx + 1}</h5>
+                        <div className="row">
+                          <div className="col-md-8">
+                            {order.cartItems.map((orderProduct, idx) => {
+                              return (
+                                <div
+                                  key={idx}
+                                  className="orderProduct border rounded-3 p-3 mb-3"
+                                >
                                   <div className="row">
-                                    <div className="col-md-2">
-                                      <img
-                                        className="w-100"
-                                        src={orderProduct.product.imageCover}
-                                        style={{ height: "150px" }}
-                                        alt=""
-                                      />
+                                    <div className="col-md-10">
+                                      <div className="row">
+                                        <div className="col-md-3">
+                                          <img
+                                            className="w-100"
+                                            src={
+                                              orderProduct.product.imageCover
+                                            }
+                                            // style={{ height: "150px" }}
+                                            alt=""
+                                          />
+                                        </div>
+                                        <div className="col-md-9 d-flex flex-column">
+                                          <Link
+                                            to={`/productDetails/${orderProduct.product._id}`}
+                                            className="title"
+                                          >
+                                            {orderProduct.product.title}
+                                          </Link>
+                                          <div className="category">
+                                            <p className="mainColor m-0">
+                                              {" "}
+                                              {
+                                                orderProduct.product.category
+                                                  .name
+                                              }
+                                            </p>
+                                          </div>
+                                          <div className="quantity">
+                                            <span>Quantity :</span>{" "}
+                                            {orderProduct.count}
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="col-md-10 d-flex flex-column">
-                                      <Link
-                                        to={`/productDetails/${orderProduct.product._id}`}
-                                        className="title"
-                                      >
-                                        {orderProduct.product.title}
-                                      </Link>
-                                      <div className="category">
-                                        <p className="mainColor m-0">
-                                          {" "}
-                                          {orderProduct.product.category.name}
-                                        </p>
+                                    <div className="col-md-2 d-flex flex-column justify-content-between py-3">
+                                      <div className="details">
+                                        <Link
+                                          to={`/productDetails/${orderProduct.product._id}`}
+                                          className="title"
+                                        >
+                                          <button className="btn mb-4 mainColorBg text-white">
+                                            Details
+                                          </button>
+                                        </Link>
                                       </div>
-                                      <div className="quantity">
-                                        <span>Quantity :</span>{" "}
-                                        {orderProduct.count}
+                                      <div className="price mt-auto">
+                                        <h6>Price : {orderProduct.price}</h6>
                                       </div>
-                                      <div
-                                        className="paymentMethod text-capitalize mainColorBg text-white px-3 py-1 my-1 rounded-pill"
-                                        style={{ width: "fit-content" }}
-                                      >
-                                        {order.paymentMethodType}
-                                      </div>
-                                      <h6 className="date mt-auto">
-                                        <span>On </span>
-                                        {order.createdAt.split("T")[0]}
-                                      </h6>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-md-2 d-flex flex-column justify-content-between py-3">
-                                  <div className="details">
-                                    <Link
-                                      to={`/productDetails/${orderProduct.product._id}`}
-                                      className="title"
-                                    >
-                                      <button className="btn mainColorBg text-white">
-                                        Details
-                                      </button>
-                                    </Link>
-                                  </div>
-                                  <div className="price mt-auto">
-                                    <h6>Price : {orderProduct.price}</h6>
-                                  </div>
-                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="col-md-4">
+                            <div className="inner border rounded-3 p-3 mb-3">
+                              <h5 className="mb-2">
+                                Total Order Price : {order.totalOrderPrice}
+                              </h5>
+                              <div className="h6 mb-3 d-flex gap-2 align-items-center">
+                                Payment Method :{" "}
+                                <span
+                                  className="paymentMethod text-capitalize mainColorBg text-white px-3 py-1 my-1 rounded-pill"
+                                  style={{ width: "fit-content" }}
+                                >
+                                {order.paymentMethodType}
+                                </span>
+                              </div>
+                              <div className="h6">
+                                Ordered At : {order.createdAt.split("T")[0]}
                               </div>
                             </div>
-                          );
-                        })}
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
