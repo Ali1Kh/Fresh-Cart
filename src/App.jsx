@@ -20,7 +20,6 @@ import WishContextProvider from "./components/context/wishListContext";
 import Wishlist from "./components/Wishlist/Wishlist";
 import Checkout from "./components/Checkout/Checkout";
 import Orders from "./components/Orders/Orders";
-import Payment from "./components/Checkout/Payment";
 
 const router = createHashRouter([
   {
@@ -77,14 +76,7 @@ const router = createHashRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: "payment",
-        element: (
-          <ProtectedRoute>
-            <Payment />
-          </ProtectedRoute>
-        ),
-      },
+     
       { path: "*", element: <NotFound /> },
     ],
   },
