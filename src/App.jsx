@@ -1,4 +1,4 @@
-import { RouterProvider, createHashRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout/Layout";
 import Login from "./components/login/Login";
@@ -86,7 +86,6 @@ const router = createHashRouter([
           </ProtectedRoute>
         ),
       },
-
       { path: "*", element: <NotFound /> },
     ],
   },

@@ -67,9 +67,9 @@ export default function Checkout() {
         { headers: { token: localStorage.getItem("Token") } }
       );
       if (data.status == "success") {
-        toast.success("Order Sent Successfuly");
+        toast("Add Payment Card");
         setTimeout(() => {
-          window.open(data.session.url);
+          window.open(data.session.url,"_self");
         }, 2000);
         clearCart();
       } else {
