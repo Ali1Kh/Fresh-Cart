@@ -4,8 +4,9 @@ export const wishContext = createContext();
 export default function WishContextProvider({ children }) {
   const [wishCount, setWishCount] = useState(0);
   const [wishList, setWishList] = useState(null);
+  const [savedId, setSavedId] = useState(null);
   async function addToWishlist(id) {
-    const data = await axios.post(
+    const { data } = await axios.post(
       `https://ecommerce.routemisr.com/api/v1/wishlist/`,
       {
         productId: id,
@@ -20,17 +21,23 @@ export default function WishContextProvider({ children }) {
     return data;
   }
   async function getWishlist() {
-    const { data } = await axios.get(
-      "https://ecommerce.routemisr.com/api/v1/wishlist",
-      {
-        headers: {
-          token: localStorage.getItem("Token"),
-        },
-      }
-    );
-    setWishCount(data.count);
-    setWishList(data.data);
-    return data;
+    try {
+      const { data } = await axios.get(
+        "https://ecommerce.routemisr.com/api/v1/wishlist",
+        {
+          headers: {
+            token: localStorage.getItem("Token"),
+          },
+        }
+      );
+      setWishCount(data.count);
+      setWishList(data.data);
+      let savedItems = data?.data.map((savedItem) => savedItem._id);
+      setSavedId(savedItems);
+      return data;
+    } catch (error) {
+      console.log("Error");
+    }
   }
   async function deleteFromWish(id) {
     const { data } = await axios.delete(
@@ -59,6 +66,7 @@ export default function WishContextProvider({ children }) {
         deleteFromWish,
         wishList,
         wishCount,
+        savedId,
       }}
     >
       {children}

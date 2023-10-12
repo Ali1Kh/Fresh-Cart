@@ -1,8 +1,16 @@
 import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authContext } from "../context/authentication";
+import toast from "react-hot-toast";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 export default function Login() {
   let userLogin = {
     email: "",
@@ -12,6 +20,11 @@ export default function Login() {
   const [btnLoad, setBtnLoading] = useState(false);
   const navigateLogin = useNavigate();
   let { setToken } = useContext(authContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   async function signIn(values) {
     setBtnLoading(true);
     try {
@@ -52,6 +65,23 @@ export default function Login() {
       return errors;
     },
   });
+  async function forgetPass() {
+    console.log("?:>", formik.values.email);
+    try {
+      let { data } = await axios.post(
+        "https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords",
+        {
+          email: formik.values.email,
+        }
+      );
+      if (data.statusMsg == "success") {
+        toast.success(data.message);
+        navigateLogin("/resetPassword");
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  }
   return (
     <>
       <title>Login</title>
@@ -77,16 +107,29 @@ export default function Login() {
               )}
             </div>
             <div className="form-floating mb-3">
-              <input
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="Password"
-              ></input>
-              <label htmlFor="password">Password</label>
+              <FormControl variant="outlined" className="w-100">
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <OutlinedInput
+                  id="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
               {formik.errors.password && formik.touched.password ? (
                 <div className="alert alert-danger">
                   {formik.errors.password}
@@ -101,6 +144,14 @@ export default function Login() {
             ) : (
               ""
             )}
+            <button
+              type="button"
+              onClick={forgetPass}
+              disabled={formik.errors.email || formik.values.email == ""}
+              className="cursor-pointer mb-3 d-block border-0 bg-white"
+            >
+              Forget Password?
+            </button>
             <button
               type="submit"
               className="btn mainColorBg text-white"

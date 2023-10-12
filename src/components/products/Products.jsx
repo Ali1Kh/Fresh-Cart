@@ -2,15 +2,20 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import "react-loader-spinner";
 import { BallTriangle } from "react-loader-spinner";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { cartContext } from "../context/cartContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import "./products.css";
 import $ from "jquery";
 import { wishContext } from "../context/wishListContext";
 export default function Products() {
+  const productsNavigate = useNavigate();
   const { cId, bId } = useParams();
+  const { addToWishlist, deleteFromWish, savedId } = useContext(wishContext);
+  const { data, isLoading } = useQuery("products", getProducts, {
+    cacheTime: 0,
+  });
   function getProducts() {
     try {
       return axios.get(
@@ -22,9 +27,6 @@ export default function Products() {
       console.log(ex);
     }
   }
-  const { data, isLoading } = useQuery("products", getProducts, {
-    cacheTime: 0,
-  });
   const { addToCart } = useContext(cartContext);
   async function addProduct(id) {
     try {
@@ -41,26 +43,44 @@ export default function Products() {
       console.log(e);
     }
   }
-  const { addToWishlist } = useContext(wishContext);
-  function addToWish(e, id) {
-    e.preventDefault();
-    e.stopPropagation();
-    addToWishlist(id);
-  }
-  $(".wishBtn").hover(
-    (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      $(e.target).removeClass("fa-regular");
-      $(e.target).addClass("fa-solid");
-    },
-    (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      $(e.target).addClass("fa-regular");
-      $(e.target).removeClass("fa-solid");
+  async function addToWish(id) {
+    try {
+      const responseData = await addToWishlist(id);
+      if (responseData.status == "success") {
+        toast.success("Product Added To Saved Items", {
+          duration: 1000,
+          position: "top-right",
+        });
+      } else {
+        toast.error("Faild To Save Product", { position: "top-right" });
+      }
+    } catch (e) {
+      toast.error("Error", { position: "top-right" });
     }
-  );
+  }
+  async function removeFromWish(id) {
+    try {
+      const responseData = await deleteFromWish(id);
+      if (responseData.status == "success") {
+        toast.success("Product Removed From Saved Items", {
+          duration: 1000,
+          position: "top-right",
+        });
+      } else {
+        toast.error("Faild To Remove Product", { position: "top-right" });
+      }
+    } catch (e) {
+      toast.error("Error", { position: "top-right" });
+    }
+  }
+  function addCart(e, pId) {
+    if (
+      !$(e.target).hasClass("addToCart") &&
+      !$(e.target).hasClass("wishBtn")
+    ) {
+      productsNavigate(`/productDetails/${pId}`);
+    }
+  }
   return (
     <>
       <title>Products</title>
@@ -86,45 +106,60 @@ export default function Products() {
                   {data?.data.data.map((product) => {
                     return (
                       <div key={product._id} className="col-md-3">
-                        <div className="cardItem rounded-3 p-1 d-flex flex-column">
-                          <Link to={`/productDetails/${product._id}`}>
-                            <div className="image"></div>
+                        <div
+                          data-id={product._id}
+                          onClick={(e) => addCart(e, product._id)}
+                          className="cardItem cursor-pointer rounded-3 p-1 d-flex flex-column"
+                        >
+                          <div className="image mb-2">
                             <img
                               src={product.imageCover}
                               alt=""
                               className="w-100"
                             />
-                            <div className="head d-flex justify-content-between align-items-center">
-                              <h5 className="category mainColor">
-                                {product.category.name}
-                              </h5>
+                          </div>
+                          <div className="head d-flex justify-content-between align-items-center">
+                            <h5 className="category mainColor">
+                              {product.category.name}
+                            </h5>
+                            {savedId ? (
+                              savedId.includes(product._id) ? (
+                                <i
+                                  onClick={() => removeFromWish(product._id)}
+                                  className="wishBtn fa-solid fa-heart fs-5 me-2 mainColor"
+                                ></i>
+                              ) : (
+                                <i
+                                  onClick={() => addToWish(product._id)}
+                                  className="wishBtn fa-regular fa-heart fs-5 me-2 mainColor"
+                                ></i>
+                              )
+                            ) : (
                               <i
-                                onClick={(e) => addToWish(e, product._id)}
+                                onClick={() => addToWish(product._id)}
                                 className="wishBtn fa-regular fa-heart fs-5 me-2 mainColor"
                               ></i>
+                            )}
+                          </div>
+                          <h6 className="title">
+                            {product.title.split("").slice(0, 25).concat("...")}
+                          </h6>
+                          <div className="info d-flex justify-content-between">
+                            <span className="price">{product.price} EGP</span>
+                            <div className="rate">
+                              <i
+                                className="fa fa-star me-1"
+                                style={{ color: "#ffc908" }}
+                              />
+                              <span>{product.ratingsAverage}</span>
                             </div>
-                            <h6 className="title">
-                              {product.title
-                                .split("")
-                                .slice(0, 25)
-                                .concat("...")}
-                            </h6>
-                            <div className="info d-flex justify-content-between">
-                              <span className="price">{product.price} EGP</span>
-                              <div className="rate">
-                                <i
-                                  className="fa fa-star me-1"
-                                  style={{ color: "#ffc908" }}
-                                />
-                                <span>{product.ratingsAverage}</span>
-                              </div>
-                            </div>
-                          </Link>
+                          </div>
+
                           <button
                             onClick={() => {
                               addProduct(product._id);
                             }}
-                            className="btn btn-success my-2"
+                            className="addToCart btn btn-success my-2"
                           >
                             Add To Cart
                           </button>

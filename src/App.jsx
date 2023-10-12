@@ -20,6 +20,8 @@ import WishContextProvider from "./components/context/wishListContext";
 import Wishlist from "./components/Wishlist/Wishlist";
 import Checkout from "./components/Checkout/Checkout";
 import Orders from "./components/Orders/Orders";
+import RestCode from "./components/resetPass/RestCode";
+import UpdatePass from "./components/resetPass/UpdatePass";
 
 const router = createHashRouter([
   {
@@ -36,6 +38,14 @@ const router = createHashRouter([
       { path: "productDetails/:id", element: <ProductDetails /> },
       { path: "categories", element: <Categories /> },
       { path: "brands", element: <Brands /> },
+      {
+        path: "resetPassword",
+        element: <RestCode />,
+      },
+      {
+        path: "UpdatePassword",
+        element: <UpdatePass />,
+      },
       {
         path: "profile",
         element: (
@@ -76,7 +86,7 @@ const router = createHashRouter([
           </ProtectedRoute>
         ),
       },
-     
+
       { path: "*", element: <NotFound /> },
     ],
   },

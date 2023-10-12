@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { createContext, useEffect } from "react";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 export const cartContext = createContext();
 export default function CartContextProvider({ children }) {
   const [cardItems, setCardItems] = useState(null);
@@ -48,7 +49,7 @@ export default function CartContextProvider({ children }) {
   }
   useEffect(() => {
     if (localStorage.getItem("Token")) {
-     getCartData();
+      getCartData();
     }
   }, []);
 
@@ -109,20 +110,25 @@ export default function CartContextProvider({ children }) {
   }
 
   return (
-    <cartContext.Provider
-      value={{
-        addToCart,
-        getCartData,
-        updateProduct,
-        deleteProduct,
-        clearCart,
-        cardItems,
-        cardItemsCount,
-        totalCartPrice,
-        cartId,
-      }}
-    >
-      {children}
-    </cartContext.Provider>
+    
+      
+      <cartContext.Provider
+        value={{
+          addToCart,
+          getCartData,
+          updateProduct,
+          deleteProduct,
+          clearCart,
+          cardItems,
+          cardItemsCount,
+          totalCartPrice,
+          cartId,
+        }}
+      >
+        
+        {children}
+        
+      </cartContext.Provider>
+    
   );
 }

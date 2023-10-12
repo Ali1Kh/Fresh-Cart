@@ -118,7 +118,7 @@ export default function Orders() {
                                   className="paymentMethod text-capitalize mainColorBg text-white px-3 py-1 my-1 rounded-pill"
                                   style={{ width: "fit-content" }}
                                 >
-                                {order.paymentMethodType}
+                                  {order.paymentMethodType}
                                 </span>
                               </div>
                               <div className="h6">
